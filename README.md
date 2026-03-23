@@ -96,6 +96,8 @@ uvicorn app.main:app --reload
 API available at `http://localhost:8000`
 Interactive docs at `http://localhost:8000/docs`
 
+**Live (Render):** `https://diabetes-ml-api-b2wo.onrender.com`
+
 ---
 
 ## Endpoints
