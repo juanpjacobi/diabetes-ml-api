@@ -7,7 +7,10 @@ app = FastAPI(title="Diabetes Prediction API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
+    allow_origins=[
+        "http://localhost:4200",
+        "https://diabetes-ml-client.netlify.app",
+    ],
     allow_methods=["POST", "GET"],
     allow_headers=["Content-Type"],
 )
