@@ -6,6 +6,7 @@ import pandas as pd
 from sklearn.pipeline import Pipeline
 
 from app.core.config import MODEL_PATH
+from app.db.database import save_prediction
 from app.schemas.prediction import CLASS_LABELS, PredictionRequest, PredictionResponse
 
 logger = logging.getLogger(__name__)
@@ -43,6 +44,8 @@ def predict(request: PredictionRequest) -> PredictionResponse:
             "duration_ms": duration_ms,
         },
     )
+
+    save_prediction(request.model_dump(), predicted_class, duration_ms)
 
     return PredictionResponse(
         predicted_class=predicted_class,

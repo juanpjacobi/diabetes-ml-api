@@ -90,14 +90,19 @@ diabetes-ml-api/
 │   └── evaluate.py                   # Accuracy, classification report, confusion matrix
 ├── app/
 │   ├── main.py                       # FastAPI app + request logging middleware
-│   ├── core/config.py                # Model and metadata path settings
+│   ├── core/config.py                # Model, metadata and DB path settings
 │   ├── schemas/prediction.py         # Pydantic models with medical range validation
 │   ├── services/model_service.py     # Model loading, inference, structured logging
-│   └── api/routes/prediction.py      # POST /predict endpoint
+│   ├── db/
+│   │   └── database.py               # SQLite: init, save_prediction, get_metrics
+│   └── api/routes/
+│       ├── prediction.py             # POST /predict endpoint
+│       └── metrics.py                # GET /metrics endpoint
 ├── tests/
-│   ├── conftest.py                   # Fixtures: TestClient, valid_payload
+│   ├── conftest.py                   # Fixtures: TestClient, valid_payload, isolated test DB
 │   ├── test_health.py                # /health — status + model metadata fields
-│   └── test_predict.py               # /predict — valid inputs and 6 invalid cases
+│   ├── test_predict.py               # /predict — valid inputs and invalid cases
+│   └── test_metrics.py               # /metrics — structure, counts, labels
 ├── requirements.txt
 ├── requirements-dev.txt              # pytest + httpx
 └── render.yaml                       # Render deploy config
@@ -226,6 +231,24 @@ HTTP 422 Unprocessable Entity
     "msg": "Input should be less than or equal to 20",
     "type": "less_than_equal"
   }]
+}
+```
+
+---
+
+### `GET /metrics`
+
+Returns prediction counts per class and average inference time.
+
+```json
+{
+  "total_predictions": 142,
+  "by_class": {
+    "0": {"label": "No diabético",           "count": 80},
+    "1": {"label": "Predicción de diabetes", "count": 22},
+    "2": {"label": "Diabético",              "count": 40}
+  },
+  "avg_duration_ms": 38.5
 }
 ```
 

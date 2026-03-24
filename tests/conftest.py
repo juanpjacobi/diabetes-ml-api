@@ -1,7 +1,23 @@
 import pytest
 from fastapi.testclient import TestClient
 
+import app.db.database as db_module
 from app.main import app
+
+
+@pytest.fixture(autouse=True)
+def use_in_memory_db(monkeypatch, tmp_path):
+    import sqlite3
+
+    test_db = tmp_path / "test.db"
+
+    def make_connection():
+        conn = sqlite3.connect(str(test_db))
+        conn.row_factory = sqlite3.Row
+        return conn
+
+    monkeypatch.setattr(db_module, "get_connection", make_connection)
+    db_module.init_db()
 
 
 @pytest.fixture

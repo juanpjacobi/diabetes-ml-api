@@ -6,8 +6,10 @@ import uuid
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.routes.metrics import router as metrics_router
 from app.api.routes.prediction import router as prediction_router
 from app.core.config import METADATA_PATH
+from app.db.database import init_db
 
 logging.basicConfig(
     level=logging.INFO,
@@ -16,6 +18,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Diabetes Prediction API")
+
+init_db()
 
 
 @app.middleware("http")
@@ -51,6 +55,7 @@ app.add_middleware(
 )
 
 app.include_router(prediction_router)
+app.include_router(metrics_router)
 
 
 @app.get("/health")
