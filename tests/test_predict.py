@@ -33,3 +33,21 @@ def test_predict_zero_age(client, valid_payload):
     valid_payload["AGE"] = 0
     response = client.post("/predict", json=valid_payload)
     assert response.status_code == 422
+
+
+def test_predict_invalid_hba1c(client, valid_payload):
+    valid_payload["HbA1c"] = -1.0
+    response = client.post("/predict", json=valid_payload)
+    assert response.status_code == 422
+
+
+def test_predict_invalid_bmi(client, valid_payload):
+    valid_payload["BMI"] = 0.0
+    response = client.post("/predict", json=valid_payload)
+    assert response.status_code == 422
+
+
+def test_predict_invalid_chol(client, valid_payload):
+    valid_payload["Chol"] = 999.0
+    response = client.post("/predict", json=valid_payload)
+    assert response.status_code == 422
