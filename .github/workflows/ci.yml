@@ -21,8 +21,5 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt -r requirements-dev.txt
 
-      - name: Train model to generate artifacts
-        run: python -m training.train
-
       - name: Run tests
         run: pytest tests/ -v
